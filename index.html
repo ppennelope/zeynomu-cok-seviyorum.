@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>...</title>
-
 <style>
 *{
   margin:0;
@@ -12,7 +11,6 @@
   box-sizing:border-box;
   font-family: Arial, Helvetica, sans-serif;
 }
-
 body{
   background:black;
   color:white;
@@ -22,8 +20,8 @@ body{
   min-height:100vh;
   overflow-x:hidden;
   text-align:center;
+  position:relative;
 }
-
 canvas{
   position:fixed;
   top:0;
@@ -32,20 +30,17 @@ canvas{
   width:100vw;
   height:100vh;
 }
-
 .container{
   max-width:90%;
   width:400px;
   padding:20px;
 }
-
 h1{
   font-weight:300;
   margin-bottom:30px;
   font-size:5vw;
   line-height:1.4;
 }
-
 button{
   padding:12px 20px;
   margin:8px;
@@ -56,38 +51,30 @@ button{
   transition:0.3s ease;
   word-wrap: break-word;
 }
-
 button:hover{
   transform:scale(1.1);
 }
-
 #yesBtn{background:white;color:black}
 #noBtn{background:#222;color:white;border:1px solid #555}
-
 .message{
   margin-top:20px;
   font-size:4vw;
   display:none;
   word-wrap: break-word;
 }
-
 .glow{
   animation:glow 1.5s infinite alternate;
 }
-
 @keyframes glow{
   from{text-shadow:0 0 10px #ff69b4,0 0 20px #ff69b4;}
   to{text-shadow:0 0 25px #ff1493,0 0 50px #ff1493;}
 }
-
 @keyframes blink{
   50%{opacity:0;}
 }
-
 .blink{
   animation:blink 1s infinite;
 }
-
 .fullscreen{
   position:absolute;
   top:0;
@@ -98,7 +85,6 @@ button:hover{
   font-size:10vw;
   z-index:10;
 }
-
 .small-note{
   font-size:3vw;
   opacity:0.6;
@@ -112,22 +98,52 @@ button:hover{
   height:auto;
   z-index:5;
 }
-
-/* Örnek pozisyonlar */
 #png1 { top:10%; left:5%; }
 #png2 { top:20%; right:10%; }
 #png3 { bottom:15%; left:40%; }
 
+/* Son ekrandaki animasyonlu png1 */
+#finalPng{
+  width:15vw;
+  height:auto;
+  display:block;
+  margin:20px auto 0 auto;
+  animation:floatGlow 2s infinite alternate;
+  z-index:10;
+}
+@keyframes floatGlow{
+  0% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 5px #ff1493); }
+  50% { transform: translateY(-10px) scale(1.05); filter: drop-shadow(0 0 20px #ff69b4); }
+  100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 5px #ff1493); }
+}
+
+/* Son ekran arka plan png2 */
+#finalScreen{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  background:url('png2.png') center/cover no-repeat;
+  z-index:-2;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  text-align:center;
+  padding:20px;
+}
 @media (max-width: 600px){
   h1 { font-size:6vw; }
   button { font-size:5vw; padding:10px 15px; }
   .message { font-size:5vw; }
-  .small-note { font-size:4vw; }
+  .small-note { font-size:4vw; } 
   .my-image { width:12vw; } 
+  #finalPng { width:25vw; }
 }
 </style>
 </head>
-
 <body>
 
 <canvas id="stars"></canvas>
@@ -146,7 +162,6 @@ button:hover{
 </div>
 
 <script>
-
 const canvas = document.getElementById("stars");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -191,13 +206,11 @@ function firstChoice(isAffettim){
   const msg=document.getElementById("thankYou");
   msg.style.display="block";
   msg.classList.add("glow");
-
   if(isAffettim){
     msg.innerHTML="💖🐱🎀 affettigin için ck tsk ederm SANA BAYILIYORUM KADINIM 🎀🐱💖";
   }else{
     msg.innerHTML="💖🎀🐱 karşıma çıkan en güzel şey olduğun için teşekkür ederim 🐱🎀💖";
   }
-
   setTimeout(showSecondScreen,5000);
 }
 
@@ -214,9 +227,7 @@ function noGrow(){
   const yesBtn=document.getElementById("yesBtn");
   const noBtn=document.getElementById("noBtn");
   const note=document.getElementById("note");
-
   yesBtn.style.transform="scale("+(1 + noClickCount*0.8)+")";
-
   if(noClickCount===4){
     yesBtn.classList.add("fullscreen");
     noBtn.style.display="none";
@@ -227,16 +238,13 @@ function noGrow(){
 function yesFlow(){
   if(noClickCount>=4){
     let cokText="Seni ";
-    for(let i=0;i<120;i++){
-      cokText+="çok";
-    }
-
+    for(let i=0;i<120;i++){ cokText+="çok"; }
     document.body.innerHTML=
-    "<div style='display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;background:black;color:white;text-align:center;padding:20px;'>"+
+    "<div id='finalScreen'>"+
       "<div style='font-size:6vw;line-height:1.6;word-wrap:break-word;'>"+cokText+"</div>"+
       "<div style='font-size:12vw;margin-top:30px;color:#ff1493;text-shadow:0 0 30px #ff1493;'>SEVİYORUM</div>"+
       "<div class='glow blink' style='margin-top:40px;font-size:6vw;overflow-wrap:break-word;'>💖🐱🎀 affettigin için ck tsk ederm SANA BAYILIYORUM KADINIM 🎀🐱💖💖💖</div>"+
-      "<img src='png1.png' style='margin-top:20px;width:15vw;height:auto;display:block;'/>"+
+      "<img src='png1.png' id='finalPng'/>"+
     "</div>";
   }else{
     document.getElementById("mainContainer").innerHTML=
@@ -246,7 +254,6 @@ function yesFlow(){
       "<div class='small-note'>(Şimdi de hayırı dene)</div>";
   }
 }
-
 </script>
 </body>
 </html>
